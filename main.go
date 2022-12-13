@@ -129,7 +129,7 @@ func main() {
 		results[i] = &PositionResult{
 			InitialTerritories: []string{country},
 		}
-		results[i].evaluate(1000, risk, continents)
+		results[i].evaluate(10000, risk, continents)
 		i++
 	}
 
