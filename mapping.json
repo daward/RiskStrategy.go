@@ -1,0 +1,670 @@
+[
+  [
+    "Indonesia",
+    "New Guinea"
+  ],
+  [
+    "New Guinea",
+    "Indonesia"
+  ],
+  [
+    "Western Australia",
+    "New Guinea"
+  ],
+  [
+    "New Guinea",
+    "Western Australia"
+  ],
+  [
+    "Eastern Australia",
+    "New Guinea"
+  ],
+  [
+    "New Guinea",
+    "Eastern Australia"
+  ],
+  [
+    "Western Australia",
+    "Eastern Australia"
+  ],
+  [
+    "Eastern Australia",
+    "Western Australia"
+  ],
+  [
+    "Indonesia",
+    "Western Australia"
+  ],
+  [
+    "Western Australia",
+    "Indonesia"
+  ],
+  [
+    "Siam",
+    "Indonesia"
+  ],
+  [
+    "Indonesia",
+    "Siam"
+  ],
+  [
+    "China",
+    "Siam"
+  ],
+  [
+    "Siam",
+    "China"
+  ],
+  [
+    "India",
+    "Siam"
+  ],
+  [
+    "Siam",
+    "India"
+  ],
+  [
+    "China",
+    "India"
+  ],
+  [
+    "India",
+    "China"
+  ],
+  [
+    "Afghanistan",
+    "India"
+  ],
+  [
+    "India",
+    "Afghanistan"
+  ],
+  [
+    "Middle East",
+    "India"
+  ],
+  [
+    "India",
+    "Middle East"
+  ],
+  [
+    "Afghanistan",
+    "China"
+  ],
+  [
+    "China",
+    "Afghanistan"
+  ],
+  [
+    "Ural",
+    "China"
+  ],
+  [
+    "China",
+    "Ural"
+  ],
+  [
+    "Siberia",
+    "China"
+  ],
+  [
+    "China",
+    "Siberia"
+  ],
+  [
+    "Mongolia",
+    "China"
+  ],
+  [
+    "China",
+    "Mongolia"
+  ],
+  [
+    "Irkutsk",
+    "Mongolia"
+  ],
+  [
+    "Mongolia",
+    "Irkutsk"
+  ],
+  [
+    "Kamchatka",
+    "Mongolia"
+  ],
+  [
+    "Mongolia",
+    "Kamchatka"
+  ],
+  [
+    "Siberia",
+    "Mongolia"
+  ],
+  [
+    "Mongolia",
+    "Siberia"
+  ],
+  [
+    "Japan",
+    "Mongolia"
+  ],
+  [
+    "Mongolia",
+    "Japan"
+  ],
+  [
+    "Kamchatka",
+    "Japan"
+  ],
+  [
+    "Japan",
+    "Kamchatka"
+  ],
+  [
+    "Irkutsk",
+    "Kamchatka"
+  ],
+  [
+    "Kamchatka",
+    "Irkutsk"
+  ],
+  [
+    "Yakutsk",
+    "Kamchatka"
+  ],
+  [
+    "Kamchatka",
+    "Yakutsk"
+  ],
+  [
+    "Alaska",
+    "Kamchatka"
+  ],
+  [
+    "Kamchatka",
+    "Alaska"
+  ],
+  [
+    "Irkutsk",
+    "Yakutsk"
+  ],
+  [
+    "Yakutsk",
+    "Irkutsk"
+  ],
+  [
+    "Siberia",
+    "Yakutsk"
+  ],
+  [
+    "Yakutsk",
+    "Siberia"
+  ],
+  [
+    "Siberia",
+    "Irkutsk"
+  ],
+  [
+    "Irkutsk",
+    "Siberia"
+  ],
+  [
+    "Siberia",
+    "Siberia"
+  ],
+  [
+    "Ural",
+    "Siberia"
+  ],
+  [
+    "Siberia",
+    "Ural"
+  ],
+  [
+    "Afghanistan",
+    "Ural"
+  ],
+  [
+    "Ural",
+    "Afghanistan"
+  ],
+  [
+    "Ukraine",
+    "Ural"
+  ],
+  [
+    "Ural",
+    "Ukraine"
+  ],
+  [
+    "Ukraine",
+    "Afghanistan"
+  ],
+  [
+    "Afghanistan",
+    "Ukraine"
+  ],
+  [
+    "Middle East",
+    "Afghanistan"
+  ],
+  [
+    "Afghanistan",
+    "Middle East"
+  ],
+  [
+    "Egypt",
+    "Middle East"
+  ],
+  [
+    "Middle East",
+    "Egypt"
+  ],
+  [
+    "Ukraine",
+    "Middle East"
+  ],
+  [
+    "Middle East",
+    "Ukraine"
+  ],
+  [
+    "Southern Europe",
+    "Middle East"
+  ],
+  [
+    "Middle East",
+    "Southern Europe"
+  ],
+  [
+    "East Africa",
+    "Middle East"
+  ],
+  [
+    "Middle East",
+    "East Africa"
+  ],
+  [
+    "North Africa",
+    "Egypt"
+  ],
+  [
+    "Egypt",
+    "North Africa"
+  ],
+  [
+    "East Africa",
+    "Egypt"
+  ],
+  [
+    "Egypt",
+    "East Africa"
+  ],
+  [
+    "Southern Europe",
+    "Egypt"
+  ],
+  [
+    "Egypt",
+    "Southern Europe"
+  ],
+  [
+    "Western Europe",
+    "North Africa"
+  ],
+  [
+    "North Africa",
+    "Western Europe"
+  ],
+  [
+    "Brazil",
+    "North Africa"
+  ],
+  [
+    "North Africa",
+    "Brazil"
+  ],
+  [
+    "Southern Europe",
+    "North Africa"
+  ],
+  [
+    "North Africa",
+    "Southern Europe"
+  ],
+  [
+    "Congo",
+    "North Africa"
+  ],
+  [
+    "North Africa",
+    "Congo"
+  ],
+  [
+    "East Africa",
+    "North Africa"
+  ],
+  [
+    "North Africa",
+    "East Africa"
+  ],
+  [
+    "South Africa",
+    "East Africa"
+  ],
+  [
+    "East Africa",
+    "South Africa"
+  ],
+  [
+    "Madagascar",
+    "East Africa"
+  ],
+  [
+    "East Africa",
+    "Madagascar"
+  ],
+  [
+    "Congo",
+    "East Africa"
+  ],
+  [
+    "East Africa",
+    "Congo"
+  ],
+  [
+    "South Africa",
+    "Congo"
+  ],
+  [
+    "Congo",
+    "South Africa"
+  ],
+  [
+    "Madagascar",
+    "South Africa"
+  ],
+  [
+    "South Africa",
+    "Madagascar"
+  ],
+  [
+    "Venezuela",
+    "Brazil"
+  ],
+  [
+    "Brazil",
+    "Venezuela"
+  ],
+  [
+    "Peru",
+    "Brazil"
+  ],
+  [
+    "Brazil",
+    "Peru"
+  ],
+  [
+    "Argentina",
+    "Brazil"
+  ],
+  [
+    "Brazil",
+    "Argentina"
+  ],
+  [
+    "Peru",
+    "Argentina"
+  ],
+  [
+    "Argentina",
+    "Peru"
+  ],
+  [
+    "Venezuela",
+    "Peru"
+  ],
+  [
+    "Peru",
+    "Venezuela"
+  ],
+  [
+    "Central America",
+    "Venezuela"
+  ],
+  [
+    "Venezuela",
+    "Central America"
+  ],
+  [
+    "Western United States",
+    "Central America"
+  ],
+  [
+    "Central America",
+    "Western United States"
+  ],
+  [
+    "Eastern United States",
+    "Central America"
+  ],
+  [
+    "Central America",
+    "Eastern United States"
+  ],
+  [
+    "Eastern United States",
+    "Western United States"
+  ],
+  [
+    "Western United States",
+    "Eastern United States"
+  ],
+  [
+    "Alberta",
+    "Western United States"
+  ],
+  [
+    "Western United States",
+    "Alberta"
+  ],
+  [
+    "Ontario",
+    "Western United States"
+  ],
+  [
+    "Western United States",
+    "Ontario"
+  ],
+  [
+    "Quebec",
+    "Eastern United States"
+  ],
+  [
+    "Eastern United States",
+    "Quebec"
+  ],
+  [
+    "Ontario",
+    "Eastern United States"
+  ],
+  [
+    "Eastern United States",
+    "Ontario"
+  ],
+  [
+    "Northwest Territory",
+    "Ontario"
+  ],
+  [
+    "Ontario",
+    "Northwest Territory"
+  ],
+  [
+    "Greenland",
+    "Ontario"
+  ],
+  [
+    "Ontario",
+    "Greenland"
+  ],
+  [
+    "Alberta",
+    "Ontario"
+  ],
+  [
+    "Ontario",
+    "Alberta"
+  ],
+  [
+    "Quebec",
+    "Ontario"
+  ],
+  [
+    "Ontario",
+    "Quebec"
+  ],
+  [
+    "Northwest Territory",
+    "Alberta"
+  ],
+  [
+    "Alberta",
+    "Northwest Territory"
+  ],
+  [
+    "Alaska",
+    "Alberta"
+  ],
+  [
+    "Alberta",
+    "Alaska"
+  ],
+  [
+    "Greenland",
+    "Quebec"
+  ],
+  [
+    "Quebec",
+    "Greenland"
+  ],
+  [
+    "Northwest Territory",
+    "Greenland"
+  ],
+  [
+    "Greenland",
+    "Northwest Territory"
+  ],
+  [
+    "Iceland",
+    "Greenland"
+  ],
+  [
+    "Greenland",
+    "Iceland"
+  ],
+  [
+    "Alaska",
+    "Northwest Territory"
+  ],
+  [
+    "Northwest Territory",
+    "Alaska"
+  ],
+  [
+    "Great Britain",
+    "Iceland"
+  ],
+  [
+    "Iceland",
+    "Great Britain"
+  ],
+  [
+    "Scandinavia",
+    "Iceland"
+  ],
+  [
+    "Iceland",
+    "Scandinavia"
+  ],
+  [
+    "Western Europe",
+    "Great Britain"
+  ],
+  [
+    "Great Britain",
+    "Western Europe"
+  ],
+  [
+    "Scandinavia",
+    "Great Britain"
+  ],
+  [
+    "Great Britain",
+    "Scandinavia"
+  ],
+  [
+    "Northern Europe",
+    "Great Britain"
+  ],
+  [
+    "Great Britain",
+    "Northern Europe"
+  ],
+  [
+    "Ukraine",
+    "Scandinavia"
+  ],
+  [
+    "Scandinavia",
+    "Ukraine"
+  ],
+  [
+    "Northern Europe",
+    "Scandinavia"
+  ],
+  [
+    "Scandinavia",
+    "Northern Europe"
+  ],
+  [
+    "Southern Europe",
+    "Western Europe"
+  ],
+  [
+    "Western Europe",
+    "Southern Europe"
+  ],
+  [
+    "Northern Europe",
+    "Western Europe"
+  ],
+  [
+    "Western Europe",
+    "Northern Europe"
+  ],
+  [
+    "Northern Europe",
+    "Southern Europe"
+  ],
+  [
+    "Southern Europe",
+    "Northern Europe"
+  ],
+  [
+    "Ukraine",
+    "Southern Europe"
+  ],
+  [
+    "Southern Europe",
+    "Ukraine"
+  ],
+  [
+    "Northern Europe",
+    "Ukraine"
+  ],
+  [
+    "Ukraine",
+    "Northern Europe"
+  ]
+]
