@@ -1,28 +1,52 @@
 package main
 
 type Path struct {
-	BorderTerritories *TerritorySet
-	Borders           *TerritorySet
-	TotalScore        float64
-	Map               *RiskBoard
-	continents        *ContinentSet
-	isRedundant       bool
-	Conquests         []string
-	IndexedConquests  *TerritorySet
+	// friendly borders are all the territories you own
+	// that are adjacent to territories you do not own
+	FriendlyBorders *TerritorySet
+
+	// enemy borders are the territories you don't own that are next to
+	// territories that you do own
+	EnemyBorders *TerritorySet
+
+	// territories are all the countries you occupy
+	Territories *TerritorySet
+
+	// the accumulated score across all conquests
+	TotalScore float64
+
+	// the risk board this path is on
+	Map *RiskBoard
+
+	// the continents on the board
+	continents *ContinentSet
+
+	// if at some point we find out this path is not any better than an identical path
+	// we will call it redundant and stop
+	isRedundant bool
+
+	// the path's latest conquest
+	Conquest string
+
+	// the total number of conquests that have taken place
+	distance int
+
+	// the path that this path is built on
+	Parent *Path
 }
 
 func (p *Path) detectBorders() {
 	// go through all the territories
-	p.IndexedConquests.walk(func(territory uint64) {
+	p.Territories.walk(func(territory uint64) {
 		p.Map.board.Visit(int(territory), func(neighbor int, c int64) (skip bool) {
 			// if this particular node is not a territory already,
 			// then this territory is a border country and the visited node is a border
 			if !p.isTerritory(uint64(neighbor)) {
 				// we have a neighbor we haven't conquered yet (its not a territory), that means its a border land
-				p.Borders.add(uint64(neighbor))
+				p.EnemyBorders.add(uint64(neighbor))
 				// the territory in question has a non-territory neighbor, therefore
 				// it is a border territory
-				p.BorderTerritories.add(territory)
+				p.FriendlyBorders.add(territory)
 			}
 			return false
 		})
@@ -30,31 +54,57 @@ func (p *Path) detectBorders() {
 }
 
 func (p *Path) isTerritory(territory uint64) bool {
-	return p.IndexedConquests.contains(territory)
+	return p.Territories.contains(territory)
 }
 
-func (p *Path) detectNewBorders() int {
+func (p *Path) detectNewBorders() {
 
-	count := p.BorderTerritories.size()
-	p.BorderTerritories.walk(func(territory uint64) {
-		protected := true
-		// visit all the neighbors of the territories
-		p.Map.board.Visit(int(territory), func(neighbor int, c int64) (skip bool) {
-			// if this particular node is not a territory already,
-			// then this territory is a border country and the visited node is a border
-			if !p.IndexedConquests.contains(uint64(neighbor)) {
-				// we have a neighbor we haven't conquered yet (its not a territory), that means its a border land
-				p.Borders.add(uint64(neighbor))
-				protected = false
+	territoryId := p.Map.countryIndex[p.Conquest]
+
+	// assume our new conquest ends up being protected by its neighbors
+	protectedConquest := true
+	// only the new node has the ability to change anything, so focus there
+	p.Map.board.Visit(int(territoryId), func(neighbor int, c int64) (skip bool) {
+
+		neighborId := uint64(neighbor)
+		// for all our neighbors that are friendly borders, we have a little more work to do
+		if p.FriendlyBorders.contains(neighborId) {
+			//fmt.Println(p.Conquest + " -> " + p.Map.countryLookup[neighborId] + " (friendly)")
+			// assume to start that the neighbor of our territory is now protected by our new conquest
+			protectedBorder := true
+			// start visiting our neighbor's neighbors to find out if it actually is protected
+			p.Map.board.Visit(neighbor, func(n2 int, c int64) (skip bool) {
+
+				// if the neighbor has a neighbor that is not one of our territories, then
+				// our new conquest did not protect it and we can bail out
+				if !p.isTerritory(uint64(n2)) {
+					//fmt.Println(p.Conquest + " -> " + p.Map.countryLookup[neighborId] + " -> " + p.Map.countryLookup[uint64(n2)] + " (enemy)")
+					protectedBorder = false
+					// bail out of the visitation loop
+					return true
+				}
+				//fmt.Println(p.Conquest + " -> " + p.Map.countryLookup[neighborId] + " -> " + p.Map.countryLookup[uint64(n2)] + " (friendly)")
+				return false
+			})
+
+			// if our neighbor is protected, we can take it out of the friendly borders
+			if protectedBorder {
+				p.FriendlyBorders.remove(neighborId)
 			}
-			return false
-		})
-		// if this new border territory is protected, then it is no longer a border territory
-		if protected {
-			p.BorderTerritories.remove(territory)
+
+		} else { // but if our neighbor is not a friendly border, then we know the new conquest is not protected and we have a new enemy!
+			//fmt.Println(p.Conquest + " -> " + p.Map.countryLookup[neighborId] + " (enemy)")
+			p.EnemyBorders.add(neighborId)
+			protectedConquest = false
 		}
+		return false
 	})
-	return count
+
+	// this isn't a border, its completely surrounded by friendly territories
+	if protectedConquest {
+		// if it is protected, take it out
+		p.FriendlyBorders.remove(territoryId)
+	}
 }
 
 func (p *Path) score() float64 {
@@ -65,11 +115,11 @@ func (p *Path) score() float64 {
 		return 0
 	}
 
-	reinforcements := p.IndexedConquests.size()/3 + p.continents.score(p)
+	reinforcements := p.Territories.size()/3 + p.continents.score(p)
 
 	// this is the key heuristic proposed. The strength of your position is measured
 	// by the reinforcements you get, divided by the territories you have to protect
-	return float64(reinforcements) / float64(p.BorderTerritories.size())
+	return float64(reinforcements) / float64(p.FriendlyBorders.size())
 }
 
 // your total score will always go up, it is an accumulation of all your previous scores
@@ -79,14 +129,14 @@ func (p *Path) setTotalScore() {
 
 // at some point there is nowhere else to go!
 func (p *Path) isComplete() bool {
-	return p.BorderTerritories.size() == 0
+	return p.FriendlyBorders.size() == 0
 }
 
 // make a new path for each border country
 func (p *Path) expand() []*Path {
-	retVal := make([]*Path, p.Borders.size())
+	retVal := make([]*Path, p.EnemyBorders.size())
 	i := 0
-	p.Borders.walk(func(territory uint64) {
+	p.EnemyBorders.walk(func(territory uint64) {
 		retVal[i] = p.conquer(territory)
 		i++
 	})
@@ -94,8 +144,23 @@ func (p *Path) expand() []*Path {
 	return retVal
 }
 
-func (p *Path) latestConquest() string {
-	return p.Conquests[p.IndexedConquests.size()-1]
+// recursively walk up the parents to put together the exact
+// path you took to get here
+func (p *Path) conquests() []string {
+	current := p
+	retVal := make([]string, current.distance+1)
+	for {
+		retVal[current.distance] = current.Conquest
+		if current.Parent == nil {
+			break
+		}
+		current = current.Parent
+		if current == current.Parent {
+			panic("Don't be your own grandpa")
+		}
+	}
+
+	return retVal
 }
 
 // add a new territory to your domain
@@ -106,27 +171,28 @@ func (p *Path) conquer(territory uint64) *Path {
 		panic("You can only conquer lands adjacent to your own, you may not conquer something you already have")
 	}
 
-	// then copy the border territories over
-	newBorderTerritories := TerritorySet{data: p.BorderTerritories.data}
-	newBorderTerritories.add(territory)
+	// build out a new copy of each territory set
+	newFriendlyBorders := TerritorySet{data: p.FriendlyBorders.data}
+	newFriendlyBorders.add(territory)
 
-	newTerritories := TerritorySet{data: p.IndexedConquests.data}
+	newEnemyBorders := TerritorySet{data: p.EnemyBorders.data}
+	newEnemyBorders.remove(territory)
+
+	newTerritories := TerritorySet{data: p.Territories.data}
 	newTerritories.add(territory)
-
-	newConquests := make([]string, p.IndexedConquests.size()+1)
-	copy(newConquests, p.Conquests)
-	newConquests[p.IndexedConquests.size()] = p.Map.countryLookup[territory]
 
 	// build the next path with those territories
 	nextPath := Path{
-		BorderTerritories: &newBorderTerritories,
-		Borders:           &TerritorySet{data: 0},
-		TotalScore:        p.TotalScore,
-		Map:               p.Map,
-		continents:        p.continents,
-		isRedundant:       false,
-		Conquests:         newConquests,
-		IndexedConquests:  &newTerritories,
+		FriendlyBorders: &newFriendlyBorders,
+		EnemyBorders:    &newEnemyBorders,
+		TotalScore:      p.TotalScore,
+		Map:             p.Map,
+		continents:      p.continents,
+		isRedundant:     false,
+		Conquest:        p.Map.countryLookup[territory],
+		Territories:     &newTerritories,
+		Parent:          p,
+		distance:        p.distance + 1,
 	}
 
 	// record it as a path to this territory
@@ -146,7 +212,7 @@ func (p *Path) conquer(territory uint64) *Path {
 
 func (this *Path) markRedundant(p *Path) bool {
 
-	if p.IndexedConquests != this.IndexedConquests {
+	if p.Territories != this.Territories {
 		return false
 	}
 

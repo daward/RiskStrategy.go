@@ -1,7 +1,7 @@
 package main
 
 type Continent struct {
-	territories []uint64
+	territories *TerritorySet
 	value       int
 }
 
@@ -10,12 +10,10 @@ type ContinentSet struct {
 }
 
 func (c *Continent) score(p *Path) int {
-	for _, territory := range c.territories {
-		if !p.isTerritory(uint64(territory)) {
-			return 0
-		}
+	if p.Territories.containsSet(c.territories) {
+		return c.value
 	}
-	return c.value
+	return 0
 }
 
 func (cs *ContinentSet) score(p *Path) int {
@@ -33,83 +31,65 @@ func NewContinentSet(risk *RiskBoard) *ContinentSet {
 	}
 
 	asia := Continent{
-		value: 7,
-		territories: []uint64{
-			risk.countryIndex["Siam"],
-			risk.countryIndex["India"],
-			risk.countryIndex["Middle East"],
-			risk.countryIndex["Afghanistan"],
-			risk.countryIndex["China"],
-			risk.countryIndex["Mongolia"],
-			risk.countryIndex["Japan"],
-			risk.countryIndex["Ural"],
-			risk.countryIndex["Siberia"],
-			risk.countryIndex["Irkutsk"],
-			risk.countryIndex["Yakutsk"],
-			risk.countryIndex["Kamchatka"],
-		},
+		value:       7,
+		territories: risk.index([]string{"Siam", "India", "Middle East", "Afghanistan", "China", "Mongolia", "Japan", "Ural", "Siberia", "Irkutsk", "Yakutsk", "Kamchatka"}),
 	}
 
 	australia := Continent{
-		value: 2,
-		territories: []uint64{
-			risk.countryIndex["New Guinea"],
-			risk.countryIndex["Indonesia"],
-			risk.countryIndex["Western Australia"],
-			risk.countryIndex["Eastern Australia"],
-		},
+		value:       2,
+		territories: risk.index([]string{"New Guinea", "Indonesia", "Western Australia", "Eastern Australia"}),
 	}
 
 	southAmerica := Continent{
 		value: 2,
-		territories: []uint64{
-			risk.countryIndex["Venezuela"],
-			risk.countryIndex["Peru"],
-			risk.countryIndex["Brazil"],
-			risk.countryIndex["Argentina"],
-		},
+		territories: risk.index([]string{
+			"Venezuela",
+			"Peru",
+			"Brazil",
+			"Argentina",
+		}),
 	}
 
 	northAmerica := Continent{
 		value: 5,
-		territories: []uint64{
-			risk.countryIndex["Central America"],
-			risk.countryIndex["Eastern United States"],
-			risk.countryIndex["Western United States"],
-			risk.countryIndex["Quebec"],
-			risk.countryIndex["Ontario"],
-			risk.countryIndex["Alberta"],
-			risk.countryIndex["Northwest Territory"],
-			risk.countryIndex["Alaska"],
-			risk.countryIndex["Greenland"],
-		},
+		territories: risk.index([]string{
+			"Central America",
+			"Eastern United States",
+			"Western United States",
+			"Quebec",
+			"Ontario",
+			"Alberta",
+			"Northwest Territory",
+			"Alaska",
+			"Greenland",
+		}),
 	}
 
 	europe := Continent{
 		value: 5,
-		territories: []uint64{
-			risk.countryIndex["Iceland"],
-			risk.countryIndex["Great Britain"],
-			risk.countryIndex["Scandinavia"],
-			risk.countryIndex["Northern Europe"],
-			risk.countryIndex["Western Europe"],
-			risk.countryIndex["Southern Europe"],
-			risk.countryIndex["Ukraine"],
-		},
+		territories: risk.index([]string{
+			"Iceland",
+			"Great Britain",
+			"Scandinavia",
+			"Northern Europe",
+			"Western Europe",
+			"Southern Europe",
+			"Ukraine",
+		}),
 	}
 
 	africa := Continent{
 		value: 3,
-		territories: []uint64{
-			risk.countryIndex["North Africa"],
-			risk.countryIndex["Egypt"],
-			risk.countryIndex["East Africa"],
-			risk.countryIndex["Congo"],
-			risk.countryIndex["South Africa"],
-			risk.countryIndex["Madagascar"],
-		},
+		territories: risk.index([]string{
+			"North Africa",
+			"Egypt",
+			"East Africa",
+			"Congo",
+			"South Africa",
+			"Madagascar",
+		}),
 	}
 
-	retVal.continents = append(retVal.continents, asia, australia, southAmerica, northAmerica, europe, africa)
+	retVal.continents = []Continent{asia, australia, southAmerica, northAmerica, europe, africa}
 	return &retVal
 }

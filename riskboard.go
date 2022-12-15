@@ -62,6 +62,39 @@ func riskboard() *RiskBoard {
 	return &retVal
 }
 
+func (this *RiskBoard) startPath(continents *ContinentSet, initialTerritory string) *Path {
+	friendlyBorders := TerritorySet{data: 0}
+	friendlyBorders.add(this.countryIndex[initialTerritory])
+
+	p := &Path{
+		Map:             this,
+		continents:      continents,
+		EnemyBorders:    &TerritorySet{data: 0},
+		FriendlyBorders: &friendlyBorders,
+		TotalScore:      0,
+		Conquest:        initialTerritory,
+		Territories:     this.index([]string{initialTerritory}),
+		distance:        0,
+		Parent:          nil,
+	}
+	p.detectBorders()
+
+	return p
+}
+
+func (this *RiskBoard) buildTerritoryPath(continents *ContinentSet, InitialTerritories []string) *Path {
+
+	p := this.startPath(continents, InitialTerritories[0])
+	for _, country := range InitialTerritories[1:] {
+		nextPath := p.conquer(this.countryIndex[country])
+		p = nextPath
+		p.TotalScore = 0
+	}
+	p.setTotalScore()
+
+	return p
+}
+
 func (r *RiskBoard) index(countries []string) *TerritorySet {
 	data := uint64(0)
 	setBit := func(n uint64, pos uint64) uint64 {
@@ -79,7 +112,7 @@ func (r *RiskBoard) clearPaths() {
 }
 
 func (r *RiskBoard) includePath(path *Path, territory uint64) {
-	pathId := path.IndexedConquests.data
+	pathId := path.Territories.data
 	coord := PathCoordinate{territory, pathId}
 
 	// get the paths at this node

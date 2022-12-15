@@ -10,9 +10,11 @@ type TerritorySet struct {
 }
 
 func (ts *TerritorySet) contains(territory uint64) bool {
-	bitPosition := uint64(territory)
+	return ts.data&(1<<uint64(territory)) != 0
+}
 
-	return ts.data&(1<<bitPosition) != 0
+func (ts *TerritorySet) containsSet(territories *TerritorySet) bool {
+	return ts.data&territories.data == territories.data
 }
 
 func (ts *TerritorySet) add(territory uint64) {
