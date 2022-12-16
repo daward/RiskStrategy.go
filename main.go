@@ -117,7 +117,7 @@ func checkAllTerritories(risk *RiskBoard, continents *ContinentSet) []*PositionR
 		results[i] = &PositionResult{
 			InitialTerritories: []string{country},
 		}
-		results[i].evaluate(50000, risk, continents)
+		results[i].evaluate(10000, risk, continents)
 		i++
 	}
 	return results
@@ -129,7 +129,7 @@ func checkSpecificTerritorySet(territories []string, risk *RiskBoard, continents
 	results[0] = &PositionResult{
 		InitialTerritories: territories,
 	}
-	results[0].evaluate(10000, risk, continents)
+	results[0].evaluate(1000, risk, continents)
 	return results
 }
 

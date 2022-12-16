@@ -4,14 +4,12 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"os"
-
-	"github.com/yourbasic/graph"
 )
 
 type RiskBoard struct {
-	board         graph.Iterator
+	board         *Graph
 	countryIndex  map[string]uint64
-	countryLookup map[uint64]string
+	countryLookup []string
 	paths         map[PathCoordinate]*Path // territory plus length of path
 }
 
@@ -20,8 +18,45 @@ type PathCoordinate struct {
 	pathId    uint64
 }
 
+type Node struct {
+	links uint64
+}
+
+type Graph struct {
+	nodes []Node
+}
+
+func (this *Graph) AddBoth(v1, v2 uint64) {
+	this.nodes[v1].links = this.nodes[v1].links | (1 << v2)
+	this.nodes[v2].links = this.nodes[v2].links | (1 << v1)
+}
+
+func (this *Graph) Visit(node uint64, callback func(neighbor uint64) bool) {
+	currentNode := this.nodes[node]
+	for link := uint64(0); link < 42; link++ {
+		// Check if the current bit is set.
+		if currentNode.links&(1<<link) != 0 {
+			if callback(link) {
+				break
+			}
+		}
+	}
+}
+
+func initGraph() *Graph {
+	g := Graph{
+		nodes: make([]Node, 42),
+	}
+	for _, node := range g.nodes {
+		node.links = 0
+	}
+
+	return &g
+}
+
 func riskboard() *RiskBoard {
 
+	g := initGraph()
 	jsonFile, _ := os.Open("./mapping.json")
 	// if we os.Open returns an error then handle it
 	// defer the closing of our jsonFile so that we can parse it later on
@@ -33,9 +68,8 @@ func riskboard() *RiskBoard {
 	json.Unmarshal([]byte(byteValue), &arr)
 
 	m := make(map[string]uint64)
-	m2 := make(map[uint64]string)
+	m2 := make([]string, 42)
 
-	g := graph.New(len(arr))
 	for i := 0; i < len(arr); i++ {
 		v1 := arr[i]
 		if countryId1, ok := m[v1[0]]; !ok {
@@ -50,7 +84,7 @@ func riskboard() *RiskBoard {
 			m2[countryId2] = v1[1]
 		}
 
-		g.AddBoth(int(m[v1[0]]), int(m[v1[1]]))
+		g.AddBoth(m[v1[0]], m[v1[1]])
 	}
 
 	var retVal RiskBoard
@@ -72,7 +106,7 @@ func (this *RiskBoard) startPath(continents *ContinentSet, initialTerritory stri
 		EnemyBorders:    &TerritorySet{data: 0},
 		FriendlyBorders: &friendlyBorders,
 		TotalScore:      0,
-		Conquest:        initialTerritory,
+		Territory:       this.countryIndex[initialTerritory],
 		Territories:     this.index([]string{initialTerritory}),
 		distance:        0,
 		Parent:          nil,
@@ -80,6 +114,10 @@ func (this *RiskBoard) startPath(continents *ContinentSet, initialTerritory stri
 	p.detectBorders()
 
 	return p
+}
+
+func (this *RiskBoard) Visit(node uint64, callback func(neighbor uint64) bool) {
+	this.board.Visit(node, callback)
 }
 
 func (this *RiskBoard) buildTerritoryPath(continents *ContinentSet, InitialTerritories []string) *Path {

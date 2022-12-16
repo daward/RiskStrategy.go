@@ -25,20 +25,19 @@ type Path struct {
 	// we will call it redundant and stop
 	isRedundant bool
 
-	// the path's latest conquest
-	Conquest string
-
 	// the total number of conquests that have taken place
 	distance int
 
 	// the path that this path is built on
 	Parent *Path
+
+	Territory uint64
 }
 
 func (p *Path) detectBorders() {
 	// go through all the territories
 	p.Territories.walk(func(territory uint64) {
-		p.Map.board.Visit(int(territory), func(neighbor int, c int64) (skip bool) {
+		p.Map.board.Visit(territory, func(neighbor uint64) (skip bool) {
 			// if this particular node is not a territory already,
 			// then this territory is a border country and the visited node is a border
 			if !p.isTerritory(uint64(neighbor)) {
@@ -59,12 +58,10 @@ func (p *Path) isTerritory(territory uint64) bool {
 
 func (p *Path) detectNewBorders() {
 
-	territoryId := p.Map.countryIndex[p.Conquest]
-
 	// assume our new conquest ends up being protected by its neighbors
 	protectedConquest := true
 	// only the new node has the ability to change anything, so focus there
-	p.Map.board.Visit(int(territoryId), func(neighbor int, c int64) (skip bool) {
+	p.Map.Visit(p.Territory, func(neighbor uint64) (skip bool) {
 
 		neighborId := uint64(neighbor)
 		// for all our neighbors that are friendly borders, we have a little more work to do
@@ -73,7 +70,7 @@ func (p *Path) detectNewBorders() {
 			// assume to start that the neighbor of our territory is now protected by our new conquest
 			protectedBorder := true
 			// start visiting our neighbor's neighbors to find out if it actually is protected
-			p.Map.board.Visit(neighbor, func(n2 int, c int64) (skip bool) {
+			p.Map.Visit(neighbor, func(n2 uint64) (skip bool) {
 
 				// if the neighbor has a neighbor that is not one of our territories, then
 				// our new conquest did not protect it and we can bail out
@@ -103,7 +100,7 @@ func (p *Path) detectNewBorders() {
 	// this isn't a border, its completely surrounded by friendly territories
 	if protectedConquest {
 		// if it is protected, take it out
-		p.FriendlyBorders.remove(territoryId)
+		p.FriendlyBorders.remove(p.Territory)
 	}
 }
 
@@ -150,7 +147,7 @@ func (p *Path) conquests() []string {
 	current := p
 	retVal := make([]string, current.distance+1)
 	for {
-		retVal[current.distance] = current.Conquest
+		retVal[current.distance] = p.Map.countryLookup[current.Territory]
 		if current.Parent == nil {
 			break
 		}
@@ -189,7 +186,7 @@ func (p *Path) conquer(territory uint64) *Path {
 		Map:             p.Map,
 		continents:      p.continents,
 		isRedundant:     false,
-		Conquest:        p.Map.countryLookup[territory],
+		Territory:       territory,
 		Territories:     &newTerritories,
 		Parent:          p,
 		distance:        p.distance + 1,
